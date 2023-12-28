@@ -7,14 +7,16 @@ export default function SingleComparison() {
   const [prompt, setPrompt] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [response, setResponse] = React.useState("");
+  const [err, setError] = React.useState("");
 
-  const getBase64 = async (file: File) => {
+  const getBase64 = async (file: File): Promise<Image> => {
     const reader = new FileReader();
     return new Promise((resolve) => {
       reader.onload = () => {
         const { result } = reader;
 
-        resolve({ data: result, mimeType: file.type });
+        if (typeof result === "string")
+          resolve({ data: result, mimeType: file.type });
       };
       reader.readAsDataURL(file);
     });
@@ -23,7 +25,7 @@ export default function SingleComparison() {
     const file = e.target?.files?.[0];
     if (file) {
       setPrompt("");
-      const image = await getBase64(file);
+      const image: Image = await getBase64(file);
       console.log(image, "pep");
       setImage(image);
     }
@@ -37,15 +39,22 @@ export default function SingleComparison() {
     setLoading(true);
     setResponse("");
     const response = await runGemini(prompt, [payload]);
-    setResponse(response);
+    // check if there was an error processing image
+    if (response?.error) {
+      setError(response.message);
+    } else {
+      setResponse(response);
+    }
+
     setLoading(false);
   };
+  console.log(response);
   return (
     <section className="flex gap-4  border  w-[800px]">
-      <div className="flex flex-col  border">
+      <div className="flex flex-col  border max-w-[600px]">
         {image && (
-          <div className="my-4">
-            <img src={image.data} alt="" />
+          <div className="my-4 border-green-400 border">
+            <img src={image.data} alt="" className="max-w-full h-auto" />
           </div>
         )}
         <div>
@@ -53,6 +62,7 @@ export default function SingleComparison() {
           <input
             id="img"
             type="file"
+            disabled={loading}
             accept=".jpeg,.jpg, .png, .webp "
             onChange={handleFileUpload}
           />
@@ -78,8 +88,15 @@ export default function SingleComparison() {
         </button>
       </div>
 
-      <div className=" border w-full p-4 ">
-        <p>{response}</p>
+      <div
+        className=" border w-full p-4  min-w-[280px]"
+        style={{ border: "1px solid red" }}
+      >
+        <pre className="min-w-[280px]" wrap="hard">
+          {response}
+        </pre>
+
+        <p className="text-red-400 py-3">{err}</p>
         {loading && <p> A moment....</p>}
       </div>
     </section>

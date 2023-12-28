@@ -5,11 +5,8 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import SingleComparison from "./Components/SingleComparison";
 import { runGemini } from "./helpers/geminiai";
-const API_KEY = "AIzaSyB2HKGRarYp_kVWe3MPrv1BHLvI0ZCKelI";
-type MyFile = null | { data: string; mimeType: string };
 
-// Access your API key (see "Set up your API key" above)
-const genAI = new GoogleGenerativeAI(API_KEY);
+type MyFile = null | { data: string; mimeType: string };
 
 function App() {
   const [img1, setImage] = useState<MyFile>(null);
@@ -33,21 +30,7 @@ function App() {
       run();
     }
   }, [img1, img2]);*/
-  const run = async () => {
-    setResponse("");
-    // For text-and-images input (multimodal), use the gemini-pro-vision model
-    const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
 
-    const prompt = "What's different between these pictures?";
-
-    const imageParts = [{ inlineData: img1 }, { inlineData: img2 }];
-
-    const result = await model.generateContent([prompt, ...imageParts]);
-    const response = await result.response;
-    const text = response.text();
-    console.log(text);
-    setResponse(text);
-  };
   const handleComparison = async () => {
     const imageParts = [{ inlineData: img1 }, { inlineData: img2 }];
     setLoading(true);

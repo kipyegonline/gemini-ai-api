@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-const API_KEY = "AIzaSyB2HKGRarYp_kVWe3MPrv1BHLvI0ZCKelI";
+const API_KEY = import.meta.env.VITE_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const runGemini = async (
@@ -13,7 +13,7 @@ export const runGemini = async (
     const response = await result.response;
     const text = response.text();
     return text;
-  } catch (error) {
-    return "lol";
+  } catch (error: unknown) {
+    return { error: true, message: error.message };
   }
 };
