@@ -8,8 +8,8 @@ export default function GeminiWebcam({ sendImage = (f) => f }) {
   React.useEffect(() => {}, []);
   const getImage = React.useCallback(() => {
     const img = cam?.current?.getScreenshot();
-    console.log(img, "img");
-    new Audio("/shuttersound.mp3").play();
+
+    new Audio("/camera-shutter-click-01.mp3").play();
     setSrc(img);
     sendImage(img);
   }, [cam]);

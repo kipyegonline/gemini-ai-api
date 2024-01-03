@@ -6,7 +6,6 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
@@ -36,7 +35,6 @@ body {
   min-height: 100vh;
   background: #ccc;
   border: 1px solid red;
-
   width: 100%;
   box-sizing: border-box;
 }
@@ -82,5 +80,20 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+#centerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  left: 50%;
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 480px) {
+  body {
+    display: block;
   }
 }

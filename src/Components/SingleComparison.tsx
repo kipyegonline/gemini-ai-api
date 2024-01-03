@@ -1,4 +1,5 @@
 import React from "react";
+//import Spinner from "react-spinners"
 import { runGemini } from "../helpers/geminiai";
 import GeminiModal from "./Modal";
 import GeminiWebcam from "./Webcam";
@@ -63,8 +64,9 @@ export default function SingleComparison() {
   const handleCameraImage = (image: string) => {
     const [type, data] = image.split(",");
     const [mimeType] = type.split(":")[1].split(";");
-
+    setOnCamera(1);
     setImage({ data: image, mimeType });
+    setTimeout(() => setOpen(false), 1000);
   };
 
   return (
@@ -101,7 +103,6 @@ export default function SingleComparison() {
             disabled={loading}
             onClick={() => {
               setOpen(!false);
-              setOnCamera(1);
             }}
             style={{
               background: onCamera == 1 ? "blue" : "",
@@ -120,7 +121,9 @@ export default function SingleComparison() {
           >
             <div>
               <GeminiWebcam sendImage={handleCameraImage} />
-              <button onClick={() => setOpen(false)}>close</button>
+              <button className="hidden" onClick={() => setOpen(false)}>
+                close
+              </button>
             </div>
           </GeminiModal>
         </div>
@@ -149,7 +152,7 @@ export default function SingleComparison() {
       </div>
 
       <div
-        className=" border w-full p-4  min-w-[280px]"
+        className=" border w-full p-4  min-w-[280px] "
         style={{ border: "1px solid red" }}
       >
         <pre className="min-w-[280px]" wrap="hard">

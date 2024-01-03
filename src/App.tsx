@@ -10,12 +10,12 @@ function App() {
   const [single, setSingle] = useState(true);
 
   return (
-    <main className=" border-green  w-full p-4 md:px-20">
+    <main className=" border-green   w-full p-4 md:px-20">
       <div className="pb-4">
-        <h1>Google Gemini AI</h1>
+        <h1>Gemini AI</h1>
       </div>
 
-      <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p-4 border-red-400 border">
+      <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p2 sm:p-4  border-red-400 border">
         <button
           style={{
             background: single ? "blue" : "#ccc",
