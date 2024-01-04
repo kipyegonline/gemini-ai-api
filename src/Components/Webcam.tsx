@@ -1,6 +1,6 @@
 import React from "react";
 import Webcam from "react-webcam";
-
+import { FaPlay } from "react-icons/fa";
 export default function GeminiWebcam({ sendImage = (f) => f }) {
   const [src, setSrc] = React.useState("");
   const cam = React.useRef(null);
@@ -27,7 +27,7 @@ export default function GeminiWebcam({ sendImage = (f) => f }) {
         videoConstraints={constraints}
       />
       <button className="my-2 w-full" onClick={getImage}>
-        Take Image...
+        <FaPlay /> Take Image...
       </button>
       {src && <small>We have an image</small>}
     </div>

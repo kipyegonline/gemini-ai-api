@@ -1,4 +1,7 @@
 import React from "react";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
+
 //import Spinner from "react-spinners"
 import { runGemini } from "../helpers/geminiai";
 import GeminiModal from "./Modal";
@@ -97,6 +100,7 @@ export default function SingleComparison() {
               accept=".jpeg,.jpg, .png, .webp "
               onChange={handleFileUpload}
             />
+            <FaCloudUploadAlt size="2rem" />
             {onCamera === 0 ? "Upload another " : "Upload image"}
           </button>
           <button
@@ -110,6 +114,7 @@ export default function SingleComparison() {
               color: onCamera == 1 ? "white" : "",
             }}
           >
+            <FaCamera size="2rem" />
             {onCamera === 1 ? "Take another one" : "Use Webcam"}
           </button>
         </div>

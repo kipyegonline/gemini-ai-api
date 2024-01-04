@@ -11,7 +11,7 @@ export const runGemini = async (
   try {
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
-    console.log(response.status, response);
+
     const text = response.text();
     return text;
   } catch (error: unknown) {
