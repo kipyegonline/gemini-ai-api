@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { runGemini } from "../helpers/geminiai";
+import Spinners from "./Spinners";
 type MyFile = null | { data: string; mimeType: string };
 
 export default function MultipleComparisons() {
@@ -123,7 +124,8 @@ export default function MultipleComparisons() {
 
         <div className="p-4  min-w-[380px]">
           {" "}
-          {loading && <p>Processing.... a moment</p>}
+          <Spinners />
+          {loading && <Spinners />}
           <p>{response}</p>
           {error && (
             <p className="p-2 text-red-500 my-2 overflow-x-scroll">{error}</p>

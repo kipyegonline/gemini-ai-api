@@ -77,7 +77,7 @@ export default function SingleComparison() {
     <section className="flex flex-col md:flex-row gap-4  border p-4 md:p-8 transition-all duration-150 ease-in">
       <div className="flex flex-col  border ">
         {image && (
-          <div className="my-4 border-green-400 border">
+          <div className="my-4 border-green-400 border max-h-[400px]">
             <img src={image.data} alt="" className="max-w-full h-auto" />
           </div>
         )}
@@ -100,7 +100,7 @@ export default function SingleComparison() {
               accept=".jpeg,.jpg, .png, .webp "
               onChange={handleFileUpload}
             />
-            <FaCloudUploadAlt size="2rem" className="inline-block mr-2" />
+            <FaCloudUploadAlt size="1.5rem" className="inline-block mr-2" />
             {onCamera === 0 ? "Upload another " : "Upload image"}
           </button>
           <button
@@ -114,7 +114,7 @@ export default function SingleComparison() {
               color: onCamera == 1 ? "white" : "",
             }}
           >
-            <FaCamera size="2rem" className="inline-block mr-2" />
+            <FaCamera size="1.5rem" className="inline-block mr-2" />
             {onCamera === 1 ? "Take another one" : "Use Webcam"}
           </button>
         </div>
@@ -166,8 +166,9 @@ export default function SingleComparison() {
         </pre>
 
         <p className="text-red-400 py-3">{err}</p>
+        <Spinners single />
 
-        {loading && <Spinners />}
+        {loading && <Spinners single />}
       </div>
     </section>
   );

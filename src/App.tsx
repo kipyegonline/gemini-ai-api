@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+import { FaRegImages } from "react-icons/fa";
+import { FaImage } from "react-icons/fa";
 import "./App.css";
 import SingleComparison from "./Components/SingleComparison";
 import MultipleComparisons from "./Components/MultipleComparisons";
@@ -13,6 +15,7 @@ function App() {
     <main className=" border-green   w-full p-4 md:px-20">
       <div className="pb-4">
         <h1>Image Reader</h1>
+        <p className="py-1">Image to text reader</p>
       </div>
 
       <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p2 sm:p-4  border-red-400 border">
@@ -25,6 +28,7 @@ function App() {
           className="w-full transition-all duration-250 ease-in"
           onClick={() => !single && setSingle(true)}
         >
+          <FaImage size="1.5rem" className="inline-block mr-2" />
           Single Image
         </button>
         <button
@@ -36,6 +40,7 @@ function App() {
           className="w-full transition-all duration-250 ease-in"
           onClick={() => single && setSingle(!true)}
         >
+          <FaRegImages size="1.5rem" className="inline-block mr-2" />
           Compare images
         </button>
       </section>
