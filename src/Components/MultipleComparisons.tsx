@@ -24,7 +24,7 @@ export default function MultipleComparisons() {
 
   const handleComparison = async () => {
     if (!prompt || !img1 || !img2) {
-      setError("Add image and image an prompt message");
+      setError("Add 2 images and  a prompt message");
       setTimeout(() => setError(""), 2000);
       return;
     }
@@ -45,7 +45,7 @@ export default function MultipleComparisons() {
   return (
     <section className="transition-all duration-150 ease-in">
       <div className="p-4">
-        <h2>Enter 2 images to compare</h2>
+        <h2>Add 2 images to compare</h2>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -125,7 +125,9 @@ export default function MultipleComparisons() {
           {" "}
           {loading && <p>Processing.... a moment</p>}
           <p>{response}</p>
-          {error && <p className="p-2 text-red-500 my-2">{error}</p>}
+          {error && (
+            <p className="p-2 text-red-500 my-2 overflow-x-scroll">{error}</p>
+          )}
         </div>
       </div>
     </section>

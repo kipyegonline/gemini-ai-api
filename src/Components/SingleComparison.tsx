@@ -3,6 +3,7 @@ import React from "react";
 import { runGemini } from "../helpers/geminiai";
 import GeminiModal from "./Modal";
 import GeminiWebcam from "./Webcam";
+import Spinners from "./Spinners";
 
 type Image = null | { data: string; mimeType: string };
 export default function SingleComparison() {
@@ -160,7 +161,8 @@ export default function SingleComparison() {
         </pre>
 
         <p className="text-red-400 py-3">{err}</p>
-        {loading && <p> A moment....</p>}
+
+        {loading && <Spinners />}
       </div>
     </section>
   );
