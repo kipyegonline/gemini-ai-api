@@ -100,7 +100,7 @@ export default function SingleComparison() {
               accept=".jpeg,.jpg, .png, .webp "
               onChange={handleFileUpload}
             />
-            <FaCloudUploadAlt size="2rem" />
+            <FaCloudUploadAlt size="2rem" className="inline-block mr-2" />
             {onCamera === 0 ? "Upload another " : "Upload image"}
           </button>
           <button
@@ -114,7 +114,7 @@ export default function SingleComparison() {
               color: onCamera == 1 ? "white" : "",
             }}
           >
-            <FaCamera size="2rem" />
+            <FaCamera size="2rem" className="inline-block mr-2" />
             {onCamera === 1 ? "Take another one" : "Use Webcam"}
           </button>
         </div>

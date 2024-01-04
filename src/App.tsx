@@ -12,7 +12,7 @@ function App() {
   return (
     <main className=" border-green   w-full p-4 md:px-20">
       <div className="pb-4">
-        <h1>Gemini AI</h1>
+        <h1>Image Reader</h1>
       </div>
 
       <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p2 sm:p-4  border-red-400 border">
@@ -42,7 +42,7 @@ function App() {
       {single && <SingleComparison />}
       {!single && <MultipleComparisons />}
       <hr />
-      <footer className="fixed left-0 bottom-0 right-0 flex justify-center py-4 bg-purple-600 text-white text-lg">
+      <footer className="fixed left-0 bottom-0 right-0 flex justify-center py-4 bg-blue-600 text-white text-lg">
         <p>All Rights Reserved &copy; {new Date().getFullYear()}</p>
       </footer>
     </main>
