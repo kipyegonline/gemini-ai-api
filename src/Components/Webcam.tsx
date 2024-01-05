@@ -7,7 +7,7 @@ export default function GeminiWebcam({ sendImage = (f) => f }) {
   const constraints = { facingMode: "user" };
   React.useEffect(() => {}, []);
   const getImage = React.useCallback(() => {
-    const img = cam?.current?.getScreenshot();
+    const img = (cam?.current as HTMLCanvasElement)?.getScreenshot();
 
     new Audio("/camera-shutter-click-01.mp3").play();
     setSrc(img);

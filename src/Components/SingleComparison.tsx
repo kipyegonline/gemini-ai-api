@@ -93,7 +93,11 @@ export default function SingleComparison() {
       <div className="flex flex-col  border ">
         {image && (
           <div className="my-4 border-green-400 border max-h-[400px]">
-            <img src={image.data} alt="" className="max-w-full h-auto" />
+            <img
+              src={image.data}
+              alt=""
+              className="max- w-full object-cover h-auto"
+            />
           </div>
         )}
         <div className="flex flex-col md:flex-row justify-evenly gap-4 p-4 items-center">
@@ -183,7 +187,13 @@ export default function SingleComparison() {
         <pre className="min-w-[280px]" wrap="hard">
           {response}
         </pre>
-
+        {!response && (
+          <div className="flexi flex-col hidden justify-center items-center h-[200px]">
+            <h3 className="p-4 text-xl font-medium">
+              Add an image and prompt message to get started
+            </h3>
+          </div>
+        )}
         {loading && <Spinners single />}
         <p className="text-red-400 py-3">{err}</p>
       </div>

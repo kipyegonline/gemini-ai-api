@@ -56,7 +56,7 @@ export default function MultipleComparisons() {
         <h2>Upload 2 images to compare</h2>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
+      <div className="flex flex-col md:flex-row gap-4 justify-around">
         <div>
           <button
             onClick={() => document.getElementById("img1")?.click()}
@@ -134,9 +134,9 @@ export default function MultipleComparisons() {
 
         <div className="p-4  min-w-[380px]">
           {" "}
-          <Spinners />
           {loading && <Spinners />}
           {response && <CopyToClipboardComponent response={response} />}
+          {!response && <h3>Add an image to get started</h3>}
           <p>{response}</p>
           {error && (
             <p className="p-2 text-red-500 my-2 overflow-x-scroll">{error}</p>
