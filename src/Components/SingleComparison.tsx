@@ -1,6 +1,7 @@
 import React from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaCamera } from "react-icons/fa";
+import { IoSend } from "react-icons/io5";
 
 //import Spinner from "react-spinners"
 import { runGemini } from "../helpers/geminiai";
@@ -8,15 +9,25 @@ import GeminiModal from "./Modal";
 import GeminiWebcam from "./Webcam";
 import Spinners from "./Spinners";
 
+import CopyToClipboardComponent from "./Copy.component";
+
 type Image = null | { data: string; mimeType: string };
 export default function SingleComparison() {
   const [image, setImage] = React.useState<Image>(null);
   const [prompt, setPrompt] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+
   const [response, setResponse] = React.useState("");
   const [err, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [onCamera, setOnCamera] = React.useState<null | 0 | 1>(null);
+
+  React.useEffect(() => {
+    if (response)
+      document
+        .getElementById("response")
+        ?.scrollIntoView({ behavior: "smooth" });
+  }, [response]);
 
   const getBase64 = async (file: File): Promise<Image> => {
     const reader = new FileReader();
@@ -49,10 +60,12 @@ export default function SingleComparison() {
       setTimeout(() => setError(""), 5000);
       return false;
     }
+    console.log(image);
     const payload = {
       inlineData: { ...image, data: image?.data.split(",")[1] },
     };
     setLoading(true);
+
     setResponse("");
     setError("");
     const response = await runGemini(prompt, [payload]);
@@ -75,6 +88,8 @@ export default function SingleComparison() {
 
   return (
     <section className="flex flex-col md:flex-row gap-4  border p-4 md:p-8 transition-all duration-150 ease-in">
+      <input type="file" className="hidden" id="default-img" />
+
       <div className="flex flex-col  border ">
         {image && (
           <div className="my-4 border-green-400 border max-h-[400px]">
@@ -101,7 +116,7 @@ export default function SingleComparison() {
               onChange={handleFileUpload}
             />
             <FaCloudUploadAlt size="1.5rem" className="inline-block mr-2" />
-            {onCamera === 0 ? "Upload another " : "Upload image"}
+            {onCamera === 0 ? "Upload another " : "Upload "}
           </button>
           <button
             className="w-full"
@@ -115,7 +130,7 @@ export default function SingleComparison() {
             }}
           >
             <FaCamera size="1.5rem" className="inline-block mr-2" />
-            {onCamera === 1 ? "Take another one" : "Use Webcam"}
+            {onCamera === 1 ? "Take another one" : "Webcam"}
           </button>
         </div>
         <div>
@@ -153,22 +168,24 @@ export default function SingleComparison() {
           disabled={loading || prompt.length === 0}
           style={{ opacity: prompt.length === 0 ? 0.4 : 1 }}
         >
-          {loading ? "Processing..." : "Ask"}
+          {loading ? "Processing..." : "Ask"}{" "}
+          <IoSend className="inline-block ml-4" />
         </button>
       </div>
 
       <div
         className=" border w-full p-4  min-w-[280px] "
         style={{ border: "1px solid red" }}
+        id="response"
       >
+        {response && <CopyToClipboardComponent response={response} />}
+
         <pre className="min-w-[280px]" wrap="hard">
           {response}
         </pre>
 
-        <p className="text-red-400 py-3">{err}</p>
-        <Spinners single />
-
         {loading && <Spinners single />}
+        <p className="text-red-400 py-3">{err}</p>
       </div>
     </section>
   );

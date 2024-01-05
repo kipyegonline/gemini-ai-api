@@ -1,6 +1,11 @@
 import React, { useState } from "react";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { MdCompare } from "react-icons/md";
+
 import { runGemini } from "../helpers/geminiai";
 import Spinners from "./Spinners";
+import { copyToClipboard } from "../helpers/clipboard";
+import CopyToClipboardComponent from "./Copy.component";
 type MyFile = null | { data: string; mimeType: string };
 
 export default function MultipleComparisons() {
@@ -32,6 +37,7 @@ export default function MultipleComparisons() {
     const imageParts = [{ inlineData: img1 }, { inlineData: img2 }];
     setLoading(true);
     setResponse("");
+
     const response = await runGemini(prompt, imageParts);
     // check if there was an error processing image
     if (response?.error) {
@@ -42,11 +48,12 @@ export default function MultipleComparisons() {
 
     setLoading(false);
   };
+
   const isMobile = matchMedia("(max-width:480px)").matches;
   return (
     <section className="transition-all duration-150 ease-in">
       <div className="p-4">
-        <h2>Add 2 images to compare</h2>
+        <h2>Upload 2 images to compare</h2>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -66,7 +73,8 @@ export default function MultipleComparisons() {
                 if (file) getBase64(file, setImage);
               }}
             />
-            {img1 ? "Upload another image" : "Upload image 1"}
+            <FaCloudUploadAlt size="1.5rem" className="inline-block mr-2" />{" "}
+            {img1 ? "Replace image" : "Upload image 1"}
           </button>
 
           {img1 && (
@@ -80,7 +88,8 @@ export default function MultipleComparisons() {
             onClick={() => document.getElementById("img2")?.click()}
             className="w-full"
           >
-            {img2 ? "Upload another image" : "Upload image 2"}
+            <FaCloudUploadAlt size="1.5rem" className="inline-block mr-2" />{" "}
+            {img2 ? "Replace image" : "Upload image 2"}
             <input
               type="file"
               className="hidden"
@@ -118,6 +127,7 @@ export default function MultipleComparisons() {
             disabled={loading}
             onClick={handleComparison}
           >
+            <MdCompare size="1.5rem" className="inline-block mr-2" />
             {loading ? "Comparing.." : "Compare"}
           </button>
         </div>
@@ -126,6 +136,7 @@ export default function MultipleComparisons() {
           {" "}
           <Spinners />
           {loading && <Spinners />}
+          {response && <CopyToClipboardComponent response={response} />}
           <p>{response}</p>
           {error && (
             <p className="p-2 text-red-500 my-2 overflow-x-scroll">{error}</p>

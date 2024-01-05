@@ -27,7 +27,7 @@ export default function GeminiWebcam({ sendImage = (f) => f }) {
         videoConstraints={constraints}
       />
       <button className="my-2 w-full" onClick={getImage}>
-        <FaPlay /> Take Image...
+        <FaPlay size="1.25rem" className="inline-block mr-2" /> Take Image...
       </button>
       {src && <small>We have an image</small>}
     </div>
