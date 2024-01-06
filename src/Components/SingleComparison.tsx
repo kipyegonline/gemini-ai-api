@@ -10,6 +10,7 @@ import GeminiWebcam from "./Webcam";
 import Spinners from "./Spinners";
 
 import CopyToClipboardComponent from "./Copy.component";
+import { defaultPayload } from "../helpers/defaults";
 
 type Image = null | { data: string; mimeType: string };
 export default function SingleComparison() {
@@ -21,6 +22,7 @@ export default function SingleComparison() {
   const [err, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [onCamera, setOnCamera] = React.useState<null | 0 | 1>(null);
+  const defaultRef = React.useRef<null | "1" | "2">(null);
 
   React.useEffect(() => {
     if (response)
@@ -28,7 +30,34 @@ export default function SingleComparison() {
         .getElementById("response")
         ?.scrollIntoView({ behavior: "smooth" });
   }, [response]);
+  React.useEffect(() => {
+    console.log(defaultRef, "defref");
+    createDefaultView();
+  }, []);
 
+  const createDefaultView = () => {
+    const defaultKey = "default-view";
+    const [a, b] = defaultPayload;
+    const defaultView = localStorage.getItem(defaultKey);
+    console.log({ a, b, defaultView, defaultRef }, "gr");
+    if (defaultView === null) {
+      setImage(a.img);
+
+      setPrompt(a.prompt);
+
+      localStorage.setItem(defaultKey, "1");
+      defaultRef.current = "1";
+      setTimeout(handleRun, 2000);
+    } else {
+      if (defaultView === "1") {
+        setImage(b.img);
+        setPrompt(b.prompt);
+        localStorage.setItem(defaultKey, "2");
+        defaultRef.current = "2";
+        setTimeout(handleRun, 2000);
+      }
+    }
+  };
   const getBase64 = async (file: File): Promise<Image> => {
     const reader = new FileReader();
     return new Promise((resolve) => {
@@ -60,7 +89,7 @@ export default function SingleComparison() {
       setTimeout(() => setError(""), 5000);
       return false;
     }
-    console.log(image);
+
     const payload = {
       inlineData: { ...image, data: image?.data.split(",")[1] },
     };
@@ -162,6 +191,7 @@ export default function SingleComparison() {
             cols={40}
             onChange={(e) => setPrompt(e.target.value)}
             id="prompt"
+            value={prompt}
             className="p-4 rounded-lg text-base outline-none active:outline-none border border-gray-400"
             placeholder="Enter your prompt"
           ></textarea>
