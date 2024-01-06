@@ -22,6 +22,7 @@ export default function SingleComparison() {
   const [err, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [onCamera, setOnCamera] = React.useState<null | 0 | 1>(null);
+  const [start, setStart] = React.useState<null | 1 | 2>(null);
   const defaultRef = React.useRef<null | "1" | "2">(null);
 
   React.useEffect(() => {
@@ -31,30 +32,35 @@ export default function SingleComparison() {
         ?.scrollIntoView({ behavior: "smooth" });
   }, [response]);
   React.useEffect(() => {
-    console.log(defaultRef, "defref");
-    createDefaultView();
+    console.log(defaultRef.current, "__defrefence");
+    if (defaultRef.current === "1") createDefaultView();
+    defaultRef.current = "1";
   }, []);
+  React.useEffect(() => {
+    if (typeof start === "number") {
+      console.log({ image, prompt }, "ffect");
+      handleRun();
+    }
+  }, [start]);
 
   const createDefaultView = () => {
     const defaultKey = "default-view";
     const [a, b] = defaultPayload;
     const defaultView = localStorage.getItem(defaultKey);
-    console.log({ a, b, defaultView, defaultRef }, "gr");
+
     if (defaultView === null) {
       setImage(a.img);
-
       setPrompt(a.prompt);
 
       localStorage.setItem(defaultKey, "1");
-      defaultRef.current = "1";
-      setTimeout(handleRun, 2000);
+
+      setStart(1);
     } else {
       if (defaultView === "1") {
         setImage(b.img);
         setPrompt(b.prompt);
         localStorage.setItem(defaultKey, "2");
-        defaultRef.current = "2";
-        setTimeout(handleRun, 2000);
+        setStart(2);
       }
     }
   };
@@ -84,6 +90,7 @@ export default function SingleComparison() {
   };
 
   const handleRun = async () => {
+    console.log(image, prompt, "at this point");
     if (!image || !prompt) {
       setError("Add a clear image together with prompt text");
       setTimeout(() => setError(""), 5000);
@@ -100,7 +107,9 @@ export default function SingleComparison() {
     const response = await runGemini(prompt, [payload]);
     // check if there was an error processing image
     if (response?.error) {
-      setError(response.message);
+      let err = response?.message.split(":");
+      err = `Something went wrong: ${err[err.length - 1] ?? ""}`;
+      setError(err);
     } else {
       setResponse(response);
     }
@@ -125,7 +134,7 @@ export default function SingleComparison() {
             <img
               src={image.data}
               alt=""
-              className="max- w-full object-cover h-auto"
+              className="max-w-full object-covers h-auto"
             />
           </div>
         )}

@@ -10,6 +10,6 @@ export const defaultPayload = [
   {
     img: { data: chart, mimeType: "image/png" },
     prompt:
-      "Kindly give me a summary of the information contained on that image",
+      "Kindly give me a summary of the information contained on the image",
   },
 ];
