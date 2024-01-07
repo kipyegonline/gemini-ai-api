@@ -15,7 +15,7 @@ export const runGemini = async (
     const text = response.text();
     return text;
   } catch (error: unknown) {
-    console.log(error.message);
+   
     return { error: true, message: error.message };
   }
 };

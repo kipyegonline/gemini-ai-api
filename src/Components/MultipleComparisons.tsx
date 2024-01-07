@@ -41,7 +41,9 @@ export default function MultipleComparisons() {
     const response = await runGemini(prompt, imageParts);
     // check if there was an error processing image
     if (response?.error) {
-      setError(response.message);
+      let err = response?.message.split(":");
+      err = `Something went wrong: ${err[err.length - 1] ?? ""}`;
+      setError(err);
     } else {
       setResponse(response);
     }
@@ -138,9 +140,7 @@ export default function MultipleComparisons() {
           {response && <CopyToClipboardComponent response={response} />}
           {!response && <h3>Add an image to get started</h3>}
           <p>{response}</p>
-          {error && (
-            <p className="p-2 text-red-500 my-2 overflow-x-scroll">{error}</p>
-          )}
+          {error && <p className="p-2 text-red-500 my-2 ">{error}</p>}
         </div>
       </div>
     </section>

@@ -61,6 +61,8 @@ export default function SingleComparison() {
         setPrompt(b.prompt);
         localStorage.setItem(defaultKey, "2");
         setStart(2);
+      } else {
+        setStart(null);
       }
     }
   };
@@ -222,11 +224,11 @@ export default function SingleComparison() {
         id="response"
       >
         {response && <CopyToClipboardComponent response={response} />}
-
         <pre className="min-w-[280px]" wrap="hard">
           {response}
         </pre>
-        {!response && (
+
+        {!response && start === null && (
           <div className="flexi flex-col hidden justify-center items-center h-[200px]">
             <h3 className="p-4 text-xl font-medium">
               Add an image and prompt message to get started
