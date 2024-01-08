@@ -12,13 +12,13 @@ function App() {
   const [single, setSingle] = useState(true);
 
   return (
-    <main className=" border-green  mb-12 w-full p-4 md:px-20">
+    <main className="   mb-12 w-full p-4 md:px-20">
       <div className="pb-4">
         <h1>Image Reader</h1>
         <p className="py-1">Convert image to text and let AI do the rest</p>
       </div>
 
-      <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p2 sm:p-4  border-red-400 border">
+      <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p2 sm:p-4  ">
         <button
           style={{
             background: single ? "blue" : "#ccc",

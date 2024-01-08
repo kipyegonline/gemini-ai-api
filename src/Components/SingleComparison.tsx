@@ -32,13 +32,11 @@ export default function SingleComparison() {
         ?.scrollIntoView({ behavior: "smooth" });
   }, [response]);
   React.useEffect(() => {
-    console.log(defaultRef.current, "__defrefence");
     if (defaultRef.current === "1") createDefaultView();
     defaultRef.current = "1";
   }, []);
   React.useEffect(() => {
     if (typeof start === "number") {
-      console.log({ image, prompt }, "ffect");
       handleRun();
     }
   }, [start]);
@@ -92,7 +90,6 @@ export default function SingleComparison() {
   };
 
   const handleRun = async () => {
-    console.log(image, prompt, "at this point");
     if (!image || !prompt) {
       setError("Add a clear image together with prompt text");
       setTimeout(() => setError(""), 5000);
@@ -110,7 +107,7 @@ export default function SingleComparison() {
     // check if there was an error processing image
     if (response?.error) {
       let err = response?.message.split(":");
-      err = `Something went wrong: ${err[err.length - 1] ?? ""}`;
+      err = `Something went wrong: ${err[err.length - 1]?.slice(0, 100) ?? ""}`;
       setError(err);
     } else {
       setResponse(response);
@@ -132,7 +129,7 @@ export default function SingleComparison() {
 
       <div className="flex flex-col  border ">
         {image && (
-          <div className="my-4 border-green-400 border max-h-[400px]">
+          <div className="my-4 border-gree border h-full object-cover max-h-[400px]">
             <img
               src={image.data}
               alt=""
@@ -218,15 +215,13 @@ export default function SingleComparison() {
         </button>
       </div>
 
-      <div
-        className=" border w-full p-4  min-w-[280px] "
-        style={{ border: "1px solid red" }}
-        id="response"
-      >
-        {response && <CopyToClipboardComponent response={response} />}
-        <pre className="min-w-[280px]" wrap="hard">
-          {response}
-        </pre>
+      <div className=" border w-full p-4  min-w-[280px] " id="response">
+        <div style={{ background: "beige", padding: response ? 16 : 0 }}>
+          {response && <CopyToClipboardComponent response={response} />}
+          <pre className="min-w-[280px] " wrap="hard">
+            {response}
+          </pre>
+        </div>
 
         {!response && start === null && (
           <div className="flexi flex-col hidden justify-center items-center h-[200px]">

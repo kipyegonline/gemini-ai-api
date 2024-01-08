@@ -1,6 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/*
+background: rgb(204,204,204);
+background: linear-gradient(90deg, rgba(204,204,204,1) 0%, rgba(221,221,221,1) 55%, rgba(255,255,255,1) 73%);
+
+*/
+/*
+background: ##cccccc;background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, ##cccccc), color-stop(0.16666666666666669, ##deeaeb), color-stop(1, ##dddddd));
+background-image: -moz-linear-gradient(top,  ##cccccc 0%, ##deeaeb 16%, ##dddddd 100%);
+background-image: -o-linear-gradient(top,  ##cccccc 0%, ##deeaeb 16%, ##dddddd 100%);;
+background-repeat: repeat-y;
+
+*/
+/*f0f2f5*/
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -8,7 +21,31 @@
   font-weight: 400;
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
+  /*
+   background: #f0f2f5;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, #cccccc),
+    color-stop(0.16666666666666669, #1aa4b1),
+    color-stop(1, #dddddd)
+  );
+  background-image: -moz-linear-gradient(
+    top,
+    #cccccc 0%,
+    #1aa4b1 16%,
+    #dddddd 100%
+  );
+  background-image: -o-linear-gradient(
+    top,
+    #cccccc 0%,
+    #1aa4b1 16%,
+    #dddddd 100%
+  );*/
+  background-repeat: repeat-y;
+  /*background-color: #242424;*/
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -31,10 +68,30 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   /*place-items: center;*/
+  background: #ddd;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, #cccccc),
+    color-stop(0.16666666666666669, #deeaeb),
+    color-stop(1, #dddddd)
+  );
+  background-image: -moz-linear-gradient(
+    top,
+    #cccccc 0%,
+    #deeaeb 16%,
+    #dddddd 100%
+  );
+  background-image: -o-linear-gradient(
+    top,
+    #cccccc 0%,
+    #deeaeb 16%,
+    #dddddd 100%
+  );
+  background-repeat: repeat-y;
   min-width: 320px;
   min-height: 100vh;
-  background: #ccc;
-  border: 1px solid red;
   width: 100%;
   box-sizing: border-box;
 }
