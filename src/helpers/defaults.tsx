@@ -5,7 +5,7 @@ export const defaultPayload = [
   {
     img: { data: car, mimeType: "image/png" },
 
-    prompt: `Give the name of the car ,also extract and return the subtitle. Lastly, give the HEX color of the light blue color behind the car`,
+    prompt: `Give me the name of the car ,also extract and return the subtitle. Lastly, give me the HEX color of the light blue color behind the car`,
   },
   {
     img: { data: chart, mimeType: "image/png" },
@@ -13,3 +13,5 @@ export const defaultPayload = [
       "Kindly give me a summary of the information contained on the image",
   },
 ];
+
+let des = `extract id number as idNumber ,date of birth as dob,sex as gender, district of birth as location full names. In full names return first part of name as firstName and last part as lastName. return results as javascript object`;

@@ -192,7 +192,7 @@ export default function SingleComparison() {
 
         <div className="flex flex-col">
           <label id="prompt" className="my-2">
-            Description
+            Describe what you want from the image
           </label>
           <textarea
             rows={3}

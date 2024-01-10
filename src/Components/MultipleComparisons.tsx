@@ -44,6 +44,7 @@ export default function MultipleComparisons() {
       let err = response?.message.split(":");
       err = `Something went wrong: ${err[err.length - 1] ?? ""}`;
       setError(err);
+      setTimeout(() => setError(""), 5000);
     } else {
       setResponse(response);
     }
@@ -51,7 +52,6 @@ export default function MultipleComparisons() {
     setLoading(false);
   };
 
-  const isMobile = matchMedia("(max-width:480px)").matches;
   return (
     <section className="transition-all duration-150 ease-in">
       <div className="p-4">
@@ -81,7 +81,7 @@ export default function MultipleComparisons() {
 
           {img1 && (
             <div className="my-4 p-4 max-w-[500px] h-auto ">
-              <img alt="" className="mx-w-full" src={base64ext + img1.data} />
+              <img alt="" className="mx-w-full" src={base64ext + img1?.data} />
             </div>
           )}
         </div>
@@ -105,7 +105,7 @@ export default function MultipleComparisons() {
           </button>
           {img2 && (
             <div className="my-4 p-4 max-w-[500px] h-auto ">
-              <img alt="" className="mx-w-full" src={base64ext + img2.data} />
+              <img alt="" className="mx-w-full" src={base64ext + img2?.data} />
             </div>
           )}
         </div>
@@ -137,9 +137,12 @@ export default function MultipleComparisons() {
         <div className="p-4  min-w-[380px]">
           {" "}
           {loading && <Spinners />}
-          {response && <CopyToClipboardComponent response={response} />}
-          {!response && <h3>Add an image to get started</h3>}
-          <p>{response}</p>
+          <div style={{ background: "beige", padding: response ? 16 : 0 }}>
+            {response && <CopyToClipboardComponent response={response} />}
+
+            <p>{response}</p>
+          </div>
+          {(!response || !error) && <h3>Add an image to get started</h3>}
           {error && <p className="p-2 text-red-500 my-2 ">{error}</p>}
         </div>
       </div>
