@@ -110,10 +110,10 @@ export default function MultipleComparisons() {
           )}
         </div>
       </div>
-      <div className="p-2 md:p-4 flex flex-col md:flex-row gap-4 justify-evenly mt-4 ">
+      <div className="p-  md:p-4 flex flex-col md:flex-row gap-4 justify-evenly mt-4  ">
         <div>
           {" "}
-          <div>
+          <div className="border-green min-w-[320px]">
             {" "}
             <p className="mb-2 py-2">Enter prompt Message</p>
             <textarea
@@ -140,10 +140,13 @@ export default function MultipleComparisons() {
           <div style={{ background: "beige", padding: response ? 16 : 0 }}>
             {response && <CopyToClipboardComponent response={response} />}
 
-            <p>{response}</p>
+            <p className="text-justify">{response}</p>
           </div>
-          {(!response || !error) && <h3>Add an image to get started</h3>}
           {error && <p className="p-2 text-red-500 my-2 ">{error}</p>}
+          <small>
+            Image reader may display inaccurate info, so double-check its
+            responses
+          </small>
         </div>
       </div>
     </section>

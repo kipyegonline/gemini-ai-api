@@ -95,7 +95,7 @@ export default function SingleComparison() {
       setTimeout(() => setError(""), 5000);
       return false;
     }
-
+    console.log(image);
     const payload = {
       inlineData: { ...image, data: image?.data.split(",")[1] },
     };
@@ -111,6 +111,9 @@ export default function SingleComparison() {
       setError(err);
     } else {
       setResponse(response);
+      if (response.includes("{")) {
+        console.log(typeof response, JSON.parse(response as object));
+      }
     }
 
     setLoading(false);
@@ -218,7 +221,7 @@ export default function SingleComparison() {
       <div className=" border w-full p-4  min-w-[280px] " id="response">
         <div style={{ background: "beige", padding: response ? 16 : 0 }}>
           {response && <CopyToClipboardComponent response={response} />}
-          <pre className="min-w-[280px] " wrap="hard">
+          <pre className=" w-full " wrap="hard">
             {response}
           </pre>
         </div>
@@ -232,6 +235,9 @@ export default function SingleComparison() {
         )}
         {loading && <Spinners single />}
         <p className="text-red-400 py-3">{err}</p>
+        <small>
+          Image reader may display inaccurate info so double-check its responses
+        </small>
       </div>
     </section>
   );
