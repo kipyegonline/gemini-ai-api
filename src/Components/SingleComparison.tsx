@@ -55,10 +55,10 @@ export default function SingleComparison() {
       setStart(1);
     } else {
       if (defaultView === "1") {
-        setImage(b.img);
-        setPrompt(b.prompt);
+        //setImage(b.img);
+        //setPrompt(b.prompt);
         localStorage.setItem(defaultKey, "2");
-        setStart(2);
+        //setStart(2);
       } else {
         setStart(null);
       }
@@ -88,6 +88,10 @@ export default function SingleComparison() {
     }
     e.target.value = "";
   };
+  const goTo = (el: string) => {
+    const element = document.getElementById(el);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleRun = async () => {
     if (!image || !prompt) {
@@ -95,11 +99,12 @@ export default function SingleComparison() {
       setTimeout(() => setError(""), 5000);
       return false;
     }
-    console.log(image);
+
     const payload = {
       inlineData: { ...image, data: image?.data.split(",")[1] },
     };
     setLoading(true);
+    setTimeout(() => goTo("response"), 500);
 
     setResponse("");
     setError("");
@@ -208,7 +213,7 @@ export default function SingleComparison() {
           ></textarea>
         </div>
         <button
-          className="w-full  my-4 p-2 rounded-lg outline-none"
+          className="w-full  my-4 p-2 rounded-lg outline-none text-white bg-blue-500"
           onClick={handleRun}
           disabled={loading || prompt.length === 0}
           style={{ opacity: prompt.length === 0 ? 0.4 : 1 }}

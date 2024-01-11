@@ -6,7 +6,7 @@ export const defaultPayload = [
   {
     img: { data: car, mimeType: "image/png" },
 
-    prompt: `Give me the name of the car ,also extract and return the subtitle. Lastly, give me the HEX color of the light blue color behind the car`,
+    prompt: `Give me the name of the car ,also  the subtitle. Lastly, give me the HEX color of the light blue color behind the car`,
   },
   {
     img: { data: theChart, mimeType: "image/png" },

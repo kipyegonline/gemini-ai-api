@@ -27,7 +27,10 @@ export default function MultipleComparisons() {
     };
     reader.readAsDataURL(file);
   };
-
+  const goTo = (el: string) => {
+    const element = document.getElementById(el);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
+  };
   const handleComparison = async () => {
     if (!prompt || !img1 || !img2) {
       setError("Add 2 images and  a prompt message");
@@ -36,6 +39,7 @@ export default function MultipleComparisons() {
     }
     const imageParts = [{ inlineData: img1 }, { inlineData: img2 }];
     setLoading(true);
+    setTimeout(() => goTo("response"), 500);
     setResponse("");
 
     const response = await runGemini(prompt, imageParts);
@@ -113,7 +117,7 @@ export default function MultipleComparisons() {
       <div className="p-  md:p-4 flex flex-col md:flex-row gap-4 justify-evenly mt-4  ">
         <div>
           {" "}
-          <div className="border-green min-w-[320px]">
+          <div className=" min-w-[320px]">
             {" "}
             <p className="mb-2 py-2">Enter prompt Message</p>
             <textarea
@@ -134,7 +138,7 @@ export default function MultipleComparisons() {
           </button>
         </div>
 
-        <div className="p-4  min-w-[380px]">
+        <div className="p-4  min-w-[380px]" id="response">
           {" "}
           {loading && <Spinners />}
           <div style={{ background: "beige", padding: response ? 16 : 0 }}>
