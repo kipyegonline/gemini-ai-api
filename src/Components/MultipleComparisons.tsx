@@ -27,7 +27,10 @@ export default function MultipleComparisons() {
     };
     reader.readAsDataURL(file);
   };
-
+  const goTo = (el: string) => {
+    const element = document.getElementById(el);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
+  };
   const handleComparison = async () => {
     if (!prompt || !img1 || !img2) {
       setError("Add 2 images and  a prompt message");
@@ -36,6 +39,7 @@ export default function MultipleComparisons() {
     }
     const imageParts = [{ inlineData: img1 }, { inlineData: img2 }];
     setLoading(true);
+    setTimeout(() => goTo("response"), 500);
     setResponse("");
 
     const response = await runGemini(prompt, imageParts);
@@ -44,6 +48,7 @@ export default function MultipleComparisons() {
       let err = response?.message.split(":");
       err = `Something went wrong: ${err[err.length - 1] ?? ""}`;
       setError(err);
+      setTimeout(() => setError(""), 5000);
     } else {
       setResponse(response);
     }
@@ -51,7 +56,6 @@ export default function MultipleComparisons() {
     setLoading(false);
   };
 
-  const isMobile = matchMedia("(max-width:480px)").matches;
   return (
     <section className="transition-all duration-150 ease-in">
       <div className="p-4">
@@ -81,7 +85,7 @@ export default function MultipleComparisons() {
 
           {img1 && (
             <div className="my-4 p-4 max-w-[500px] h-auto ">
-              <img alt="" className="mx-w-full" src={base64ext + img1.data} />
+              <img alt="" className="mx-w-full" src={base64ext + img1?.data} />
             </div>
           )}
         </div>
@@ -105,15 +109,15 @@ export default function MultipleComparisons() {
           </button>
           {img2 && (
             <div className="my-4 p-4 max-w-[500px] h-auto ">
-              <img alt="" className="mx-w-full" src={base64ext + img2.data} />
+              <img alt="" className="mx-w-full" src={base64ext + img2?.data} />
             </div>
           )}
         </div>
       </div>
-      <div className="p-2 md:p-4 flex flex-col md:flex-row gap-4 justify-evenly mt-4 ">
+      <div className="p-  md:p-4 flex flex-col md:flex-row gap-4 justify-evenly mt-4  ">
         <div>
           {" "}
-          <div>
+          <div className=" min-w-[320px]">
             {" "}
             <p className="mb-2 py-2">Enter prompt Message</p>
             <textarea
@@ -134,13 +138,19 @@ export default function MultipleComparisons() {
           </button>
         </div>
 
-        <div className="p-4  min-w-[380px]">
+        <div className="p-4  min-w-[380px]" id="response">
           {" "}
           {loading && <Spinners />}
-          {response && <CopyToClipboardComponent response={response} />}
-          {!response && <h3>Add an image to get started</h3>}
-          <p>{response}</p>
+          <div style={{ background: "beige", padding: response ? 16 : 0 }}>
+            {response && <CopyToClipboardComponent response={response} />}
+
+            <p className="text-justify">{response}</p>
+          </div>
           {error && <p className="p-2 text-red-500 my-2 ">{error}</p>}
+          <small>
+            Image reader may display inaccurate info, so double-check its
+            responses
+          </small>
         </div>
       </div>
     </section>

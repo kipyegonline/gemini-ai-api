@@ -55,10 +55,10 @@ export default function SingleComparison() {
       setStart(1);
     } else {
       if (defaultView === "1") {
-        setImage(b.img);
-        setPrompt(b.prompt);
+        //setImage(b.img);
+        //setPrompt(b.prompt);
         localStorage.setItem(defaultKey, "2");
-        setStart(2);
+        //setStart(2);
       } else {
         setStart(null);
       }
@@ -88,6 +88,10 @@ export default function SingleComparison() {
     }
     e.target.value = "";
   };
+  const goTo = (el: string) => {
+    const element = document.getElementById(el);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleRun = async () => {
     if (!image || !prompt) {
@@ -100,6 +104,7 @@ export default function SingleComparison() {
       inlineData: { ...image, data: image?.data.split(",")[1] },
     };
     setLoading(true);
+    setTimeout(() => goTo("response"), 500);
 
     setResponse("");
     setError("");
@@ -111,6 +116,9 @@ export default function SingleComparison() {
       setError(err);
     } else {
       setResponse(response);
+      if (response.includes("{")) {
+        console.log(typeof response, JSON.parse(response as object));
+      }
     }
 
     setLoading(false);
@@ -192,7 +200,7 @@ export default function SingleComparison() {
 
         <div className="flex flex-col">
           <label id="prompt" className="my-2">
-            Description
+            Describe what you want from the image
           </label>
           <textarea
             rows={3}
@@ -205,7 +213,7 @@ export default function SingleComparison() {
           ></textarea>
         </div>
         <button
-          className="w-full  my-4 p-2 rounded-lg outline-none"
+          className="w-full  my-4 p-2 rounded-lg outline-none text-white bg-blue-500"
           onClick={handleRun}
           disabled={loading || prompt.length === 0}
           style={{ opacity: prompt.length === 0 ? 0.4 : 1 }}
@@ -218,7 +226,7 @@ export default function SingleComparison() {
       <div className=" border w-full p-4  min-w-[280px] " id="response">
         <div style={{ background: "beige", padding: response ? 16 : 0 }}>
           {response && <CopyToClipboardComponent response={response} />}
-          <pre className="min-w-[280px] " wrap="hard">
+          <pre className=" w-full " wrap="hard">
             {response}
           </pre>
         </div>
@@ -232,6 +240,9 @@ export default function SingleComparison() {
         )}
         {loading && <Spinners single />}
         <p className="text-red-400 py-3">{err}</p>
+        <small>
+          Image reader may display inaccurate info so double-check its responses
+        </small>
       </div>
     </section>
   );
