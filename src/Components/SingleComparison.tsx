@@ -240,9 +240,9 @@ export default function SingleComparison() {
         )}
         {loading && <Spinners single />}
         <p className="text-red-400 py-3">{err}</p>
-        <small>
+        {response && <small>
           Image reader may display inaccurate info so double-check its responses
-        </small>
+        </small>}
       </div>
     </section>
   );

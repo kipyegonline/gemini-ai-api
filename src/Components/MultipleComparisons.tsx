@@ -147,10 +147,12 @@ export default function MultipleComparisons() {
             <p className="text-justify">{response}</p>
           </div>
           {error && <p className="p-2 text-red-500 my-2 ">{error}</p>}
-          <small>
-            Image reader may display inaccurate info, so double-check its
-            responses
-          </small>
+          {response && (
+            <small>
+              Image reader may display inaccurate info, so double-check its
+              responses
+            </small>
+          )}
         </div>
       </div>
     </section>
