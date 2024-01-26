@@ -24,7 +24,7 @@ export default function MultipleComparisons() {
 
   const base64ext = "data:image/png;base64,";
   const [loading, setLoading] = useState(false);
-  const MB = 1e3;
+  const MB = 1e6;
 
   const getBase64 = (file: File, setState = (f: any) => f) => {
     const reader = new FileReader();

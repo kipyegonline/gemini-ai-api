@@ -79,7 +79,7 @@ export default function SingleComparison() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
     setOnCamera(0);
-    const MB = 1e3;
+    const MB = 1e6;
 
     if (file) {
       setPrompt("");
