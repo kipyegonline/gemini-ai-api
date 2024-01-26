@@ -79,10 +79,19 @@ export default function SingleComparison() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
     setOnCamera(0);
+    const MB = 1e3;
+
     if (file) {
       setPrompt("");
+      const { size } = file;
+      if (size >= 4 * MB) {
+        setError("Upload an image below 4MB");
+        return;
+      } else {
+        setError("");
+      }
 
-      const image: Image = await getBase64(file);
+      const image: Image | null = await getBase64(file);
 
       setImage(image);
     }
@@ -137,11 +146,11 @@ export default function SingleComparison() {
 
       <div className="flex flex-col  border ">
         {image && (
-          <div className="my-4 border-gree border h-full object-cover max-h-[400px]">
+          <div className="my-4 border-green border h-full object-cover max-h-[400px]">
             <img
               src={image.data}
               alt=""
-              className="max-w-full object-covers h-auto"
+              className="max-w-full object-covers h-auto max-h-[400px]"
             />
           </div>
         )}
@@ -239,10 +248,13 @@ export default function SingleComparison() {
           </div>
         )}
         {loading && <Spinners single />}
-        <p className="text-red-400 py-3">{err}</p>
-        {response && <small>
-          Image reader may display inaccurate info so double-check its responses
-        </small>}
+        <p className="text-red-600 py-3">{err}</p>
+        {response && (
+          <small>
+            Image reader may display inaccurate info so double-check its
+            responses
+          </small>
+        )}
       </div>
     </section>
   );
