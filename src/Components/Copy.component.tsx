@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaCopy } from "react-icons/fa";
 import { copyToClipboard } from "../helpers/clipboard";
-import { FaCheck } from "react-icons/fa";
 import { FaCheckDouble } from "react-icons/fa";
 
 export default function CopyToClipboardComponent({ response = "" }) {
