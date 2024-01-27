@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaCopy } from "react-icons/fa";
 import { copyToClipboard } from "../helpers/clipboard";
+import { FaCheckDouble } from "react-icons/fa";
 
 export default function CopyToClipboardComponent({ response = "" }) {
   const [copied, setCopied] = useState(false);
@@ -11,24 +12,23 @@ export default function CopyToClipboardComponent({ response = "" }) {
     if (await copyToClipboard(response)) {
       setCopied(true);
       setShow(true);
-      setTimeout(() => setShow(false), 3000);
+      setTimeout(() => setShow(false), 5000);
     }
   };
 
   return (
     <div className="flex justify-end items-center mb-2 relative">
       {" "}
+      <span className="text-green-600 text-base mr-2">
+        {" "}
+        {show && <FaCheckDouble />}
+      </span>
       <span
         style={{ color: copied ? "blue" : "" }}
         onClick={() => handleCopy(response)}
       >
         <FaCopy />
       </span>{" "}
-      {show && (
-        <span className=" absolute right-6 text-green-600 ml-2 transition-all duration-500 ease-in-out font-medium">
-          copied!
-        </span>
-      )}
     </div>
   );
 }
