@@ -141,12 +141,12 @@ export default function SingleComparison() {
   };
 
   return (
-    <section className="flex flex-col md:flex-row gap-4  border p-4 md:p-8 transition-all duration-150 ease-in">
+    <section className="flex flex-col md:flex-row gap-4   p-4 md:p-8 transition-all duration-150 ease-in">
       <input type="file" className="hidden" id="default-img" />
 
-      <div className="flex flex-col  border ">
+      <div className="flex flex-col   ">
         {image && (
-          <div className="my-4 border-green border h-full object-cover max-h-[400px]">
+          <div className="my-4 border-greens h-full object-cover max-h-[400px]">
             <img
               src={image.data}
               alt=""
@@ -232,10 +232,10 @@ export default function SingleComparison() {
         </button>
       </div>
 
-      <div className=" border w-full p-4  min-w-[280px] " id="response">
+      <div className="  w-full p-4  min-w-[280px] " id="response">
         <div style={{ background: "beige", padding: response ? 16 : 0 }}>
           {response && <CopyToClipboardComponent response={response} />}
-          <pre className=" w-full " wrap="hard">
+          <pre className=" w-full response-prev " wrap="hard">
             {response}
           </pre>
         </div>

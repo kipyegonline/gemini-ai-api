@@ -68,7 +68,9 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   /*place-items: center;*/
-  background: #ddd;
+  background: #ccc;
+  /*
+
   background-image: -webkit-gradient(
     linear,
     left top,
@@ -89,11 +91,26 @@ body {
     #deeaeb 16%,
     #dddddd 100%
   );
-  background-repeat: repeat-y;
+  background-repeat: repeat-y;*/
   min-width: 320px;
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
+}
+
+body[data-mode="dark"] {
+  background-color: rgba(0, 0, 0, 0.9);
+  color-scheme: dark;
+  color: white;
+  transition: all 400ms ease-in-out;
+}
+body[data-mode="dark"] button {
+  background-color: blue;
+  transition: all 400ms ease-in-out;
+}
+.response-prev {
+  color: black;
+  transition: all 400ms ease-in-out;
 }
 .border-green {
   border: 1px solid green;
@@ -130,7 +147,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    /* background-color: #ffffff;*/
   }
   a:hover {
     color: #747bff;

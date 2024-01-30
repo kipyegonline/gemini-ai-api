@@ -190,7 +190,10 @@ export default function MultipleComparisons() {
         <div className="p-4  min-w-[380px]" id="response">
           {" "}
           {loading && <Spinners />}
-          <div style={{ background: "beige", padding: response ? 16 : 0 }}>
+          <div
+            style={{ background: "beige", padding: response ? 16 : 0 }}
+            className="response-prev"
+          >
             {response && <CopyToClipboardComponent response={response} />}
 
             <p className="text-justify">{response}</p>
