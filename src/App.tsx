@@ -33,6 +33,7 @@ function App() {
         <img
           src="/public/android-chrome-512x512.png"
           className="w-20 rounded-lg h-auto"
+          alt=""
         />
       </div>
       <div className="absolute right-0 mr-4 z-30  cursor-pointer p-2">
