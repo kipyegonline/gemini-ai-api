@@ -28,7 +28,7 @@ function App() {
   };
   handleModes();
   return (
-    <main className="   mb-12 w-full p-4 md:px-20">
+    <main className=" mb-12 w-full p-2 md:p-4 md:px-20 ">
       <div className="absolute left-0 ml-4 hidden">
         <img
           src="/public/android-chrome-512x512.png"
@@ -36,7 +36,7 @@ function App() {
           alt=""
         />
       </div>
-      <div className="absolute right-0 mr-4 z-30  cursor-pointer p-2">
+      <div className="absolute right-0 mr-0 md:mr-4 z-30  cursor-pointer p-2">
         {isDark ? (
           <FiSun onClick={() => handleDark(!true)} className="text-2xl" />
         ) : (
@@ -44,7 +44,7 @@ function App() {
         )}
       </div>
       <div className="pb-4">
-        <h1>Image Reader</h1>
+        <h1 className="text-balance">Image Reader</h1>
         <p className="py-1">Convert image to text and let AI do the rest</p>
       </div>
 
@@ -77,7 +77,7 @@ function App() {
       {single && <SingleComparison />}
       {!single && <MultipleComparisons />}
       <hr />
-      <footer className="fixed left-0 bottom-0 right-0 flex justify-center py-4 bg-blue-600 text-white text-lg">
+      <footer className="fixed left-0 bottom-0 right-0 flex flex-col hidden justify-center py-4 bg-blue-600 text-white text-lg">
         <p>All Rights Reserved &copy; {new Date().getFullYear()}</p>
       </footer>
     </main>

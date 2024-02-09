@@ -232,7 +232,7 @@ export default function SingleComparison() {
         </button>
       </div>
 
-      <div className="  w-full p-4  min-w-[280px] " id="response">
+      <div className="  w-full p-4  min-w-[280px]" id="response">
         <div style={{ background: "beige", padding: response ? 16 : 0 }}>
           {response && <CopyToClipboardComponent response={response} />}
           <pre className=" w-full response-prev " wrap="hard">

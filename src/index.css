@@ -169,5 +169,7 @@ button:focus-visible {
 @media (max-width: 480px) {
   body {
     display: block;
+    padding: 0rem;
+    width: 100%;
   }
 }

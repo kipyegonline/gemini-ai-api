@@ -166,7 +166,7 @@ export default function MultipleComparisons() {
       <div className="p-  md:p-4 flex flex-col md:flex-row gap-4 justify-evenly mt-4  ">
         <div>
           {" "}
-          <div className=" min-w-[320px]">
+          <div className="  w-full">
             {" "}
             <p className="mb-2 py-2">Enter prompt Message</p>
             <textarea
@@ -187,7 +187,7 @@ export default function MultipleComparisons() {
           </button>
         </div>
 
-        <div className="p-4  min-w-[380px]" id="response">
+        <div className="p-2 md:p-4  min-w-[280px]" id="response">
           {" "}
           {loading && <Spinners />}
           <div
