@@ -52,3 +52,8 @@
 .ReactModal__Overlay--before-close {
   opacity: 0;
 }
+@media (max-width: 640px) {
+  #root {
+    padding: 0rem;
+  }
+}

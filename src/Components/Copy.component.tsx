@@ -15,6 +15,7 @@ export default function CopyToClipboardComponent({ response = "" }) {
       setTimeout(() => setShow(false), 5000);
     }
   };
+  const getMode = () => document.querySelector("[data-mode='dark']");
 
   return (
     <div className="flex justify-end items-center mb-2 relative">
@@ -27,7 +28,7 @@ export default function CopyToClipboardComponent({ response = "" }) {
         style={{ color: copied ? "blue" : "" }}
         onClick={() => handleCopy(response)}
       >
-        <FaCopy />
+        <FaCopy style={{ fill: getMode() ? "black" : "" }} />
       </span>{" "}
     </div>
   );
