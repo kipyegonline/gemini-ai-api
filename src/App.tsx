@@ -77,7 +77,7 @@ function App() {
       {single && <SingleComparison />}
       {!single && <MultipleComparisons />}
       <hr />
-      <footer className="fixed left-0 bottom-0 right-0 flex flex-col hidden justify-center py-4 bg-blue-600 text-white text-lg">
+      <footer className="fixed left-0 bottom-0 right-0 flex flex-col  justify-center py-4 bg-blue-600 text-white text-lg">
         <p>All Rights Reserved &copy; {new Date().getFullYear()}</p>
       </footer>
     </main>
