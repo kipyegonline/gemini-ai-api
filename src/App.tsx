@@ -7,6 +7,7 @@ import { FiSun } from "react-icons/fi";
 import "./App.css";
 import SingleComparison from "./Components/SingleComparison";
 import MultipleComparisons from "./Components/MultipleComparisons";
+import { onMount } from "svelte";
 
 function App() {
   const [single, setSingle] = useState(true);
@@ -27,6 +28,16 @@ function App() {
     else document.body.removeAttribute("data-mode");
   };
   handleModes();
+  const handleVisibilty = () => {
+    if (document.hidden) {
+      document.body.setAttribute("data-mode", "dark");
+    } else {
+      document.body.removeAttribute("data-mode");
+    }
+  };
+  onMount(() => {
+    document.addEventListener("visibilitychange", handleVisibilty);
+  });
   return (
     <main className=" mb-12 w-full p-2 md:p-4 md:px-20 ">
       <div className="absolute left-0 ml-4 hidden">
