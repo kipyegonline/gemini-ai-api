@@ -53,7 +53,7 @@ function App() {
       </div>
       <div className="pb-4">
         <h1 className="text-balance">Image Reader</h1>
-        <p className="py-1">Convert image to text and let AI do the rest</p>
+        <p className="py-1">Convert Image to text, get insights using AI</p>
       </div>
 
       <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p2 sm:p-4  ">
