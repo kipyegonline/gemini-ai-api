@@ -224,8 +224,8 @@ export default function SingleComparison() {
         <button
           className="w-full  my-4 p-2 rounded-lg outline-none text-white bg-blue-500"
           onClick={handleRun}
-          disabled={loading || prompt.length === 0}
-          style={{ opacity: prompt.length === 0 ? 0.4 : 1 }}
+          disabled={loading || prompt.trim().length === 0}
+          style={{ opacity: prompt.trim().length === 0 ? 0.5 : 1 }}
         >
           {loading ? "Processing..." : "Ask"}{" "}
           <IoSend className="inline-block ml-4" />

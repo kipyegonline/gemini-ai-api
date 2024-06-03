@@ -52,7 +52,7 @@ function App() {
         )}
       </div>
       <div className="pb-4">
-        <h1 className="text-balance">Image Reader</h1>
+        <h1 className="text-balance">Image Reader AI</h1>
         <p className="py-1">Convert Image to text, get insights using AI</p>
       </div>
 
