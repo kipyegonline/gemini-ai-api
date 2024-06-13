@@ -6,7 +6,7 @@ export const runGemini = async (
   prompt = "What's difference between these pictures?",
   imageParts: any[]
 ) => {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   try {
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
