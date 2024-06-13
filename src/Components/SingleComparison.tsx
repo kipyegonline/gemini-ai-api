@@ -79,10 +79,19 @@ export default function SingleComparison() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
     setOnCamera(0);
+    const MB = 1e6;
+
     if (file) {
       setPrompt("");
+      const { size } = file;
+      if (size >= 4 * MB) {
+        setError("Upload an image below 4MB");
+        return;
+      } else {
+        setError("");
+      }
 
-      const image: Image = await getBase64(file);
+      const image: Image | null = await getBase64(file);
 
       setImage(image);
     }
@@ -132,16 +141,16 @@ export default function SingleComparison() {
   };
 
   return (
-    <section className="flex flex-col md:flex-row gap-4  border p-4 md:p-8 transition-all duration-150 ease-in">
+    <section className="flex flex-col md:flex-row gap-4   p-4 md:p-8 transition-all duration-150 ease-in">
       <input type="file" className="hidden" id="default-img" />
 
-      <div className="flex flex-col  border ">
+      <div className="flex flex-col   ">
         {image && (
-          <div className="my-4 border-gree border h-full object-cover max-h-[400px]">
+          <div className="my-4 border-greens h-full object-cover max-h-[400px]">
             <img
               src={image.data}
               alt=""
-              className="max-w-full object-covers h-auto"
+              className="max-w-full object-covers h-auto max-h-[400px]"
             />
           </div>
         )}
@@ -215,18 +224,18 @@ export default function SingleComparison() {
         <button
           className="w-full  my-4 p-2 rounded-lg outline-none text-white bg-blue-500"
           onClick={handleRun}
-          disabled={loading || prompt.length === 0}
-          style={{ opacity: prompt.length === 0 ? 0.4 : 1 }}
+          disabled={loading || prompt.trim().length === 0}
+          style={{ opacity: prompt.trim().length === 0 ? 0.5 : 1 }}
         >
           {loading ? "Processing..." : "Ask"}{" "}
           <IoSend className="inline-block ml-4" />
         </button>
       </div>
 
-      <div className=" border w-full p-4  min-w-[280px] " id="response">
+      <div className="  w-full p-4  min-w-[280px]" id="response">
         <div style={{ background: "beige", padding: response ? 16 : 0 }}>
           {response && <CopyToClipboardComponent response={response} />}
-          <pre className=" w-full " wrap="hard">
+          <pre className=" w-full response-prev " wrap="hard">
             {response}
           </pre>
         </div>
@@ -239,10 +248,13 @@ export default function SingleComparison() {
           </div>
         )}
         {loading && <Spinners single />}
-        <p className="text-red-400 py-3">{err}</p>
-        <small>
-          Image reader may display inaccurate info so double-check its responses
-        </small>
+        <p className="text-red-600 py-3">{err}</p>
+        {response && (
+          <small>
+            Image reader may display inaccurate info so double-check its
+            responses
+          </small>
+        )}
       </div>
     </section>
   );

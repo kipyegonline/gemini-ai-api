@@ -3,11 +3,10 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const runGemini = async (
-  prompt = "What's different between these pictures?",
+  prompt = "What's difference between these pictures?",
   imageParts: any[]
 ) => {
-  // For text-and-images input (multimodal), use the gemini-pro-vision model
-  const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   try {
     const result = await model.generateContent([prompt, ...imageParts]);
     const response = await result.response;
@@ -15,7 +14,6 @@ export const runGemini = async (
     const text = response.text();
     return text;
   } catch (error: unknown) {
-   
     return { error: true, message: error.message };
   }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { MdCompare } from "react-icons/md";
 
@@ -8,15 +8,23 @@ import { copyToClipboard } from "../helpers/clipboard";
 import CopyToClipboardComponent from "./Copy.component";
 type MyFile = null | { data: string; mimeType: string };
 
+type UploadArg = {
+  side: number;
+  file: File;
+  setState: React.Dispatch<SetStateAction<MyFile>>;
+};
+
 export default function MultipleComparisons() {
   const [img1, setImage] = useState<MyFile>(null);
   const [img2, setImage2] = useState<MyFile>(null);
   const [response, setResponse] = useState("");
   const [error, setError] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [imageErr, setImageErr] = useState({ im1: "", im2: "" });
 
   const base64ext = "data:image/png;base64,";
   const [loading, setLoading] = useState(false);
+  const MB = 1e6;
 
   const getBase64 = (file: File, setState = (f: any) => f) => {
     const reader = new FileReader();
@@ -26,6 +34,31 @@ export default function MultipleComparisons() {
       setState({ data: result?.split(",")[1], mimeType: file.type });
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleImageUpload = ({ file, side, setState }: UploadArg) => {
+    if (side === 1) {
+      const { size } = file;
+      if (size >= 4 * MB) {
+        setImageErr({ ...imageErr, im1: "Upload an image below 4MB" });
+        setState(null);
+
+        return;
+      } else {
+        setImageErr({ ...imageErr, im1: "" });
+      }
+    } else if (side === 2) {
+      const { size } = file;
+      if (size >= 4 * MB) {
+        setImageErr({ ...imageErr, im2: "Upload an image below 4MB" });
+        setState(null);
+        return;
+      } else {
+        setImageErr({ ...imageErr, im2: "" });
+      }
+    }
+
+    getBase64(file, setState);
   };
   const goTo = (el: string) => {
     const element = document.getElementById(el);
@@ -76,7 +109,8 @@ export default function MultipleComparisons() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const file = (e.target as HTMLInputElement)?.files?.[0];
 
-                if (file) getBase64(file, setImage);
+                if (file)
+                  handleImageUpload({ file, side: 1, setState: setImage });
               }}
             />
             <FaCloudUploadAlt size="1.5rem" className="inline-block mr-2" />{" "}
@@ -84,9 +118,16 @@ export default function MultipleComparisons() {
           </button>
 
           {img1 && (
-            <div className="my-4 p-4 max-w-[500px] h-auto ">
-              <img alt="" className="mx-w-full" src={base64ext + img1?.data} />
+            <div className="my-4 p-4 max-w-[500px]  ">
+              <img
+                alt=""
+                className="mx-w-full max-h-[400px] h-auto"
+                src={base64ext + img1?.data}
+              />
             </div>
+          )}
+          {imageErr?.im1 && (
+            <p className="p-2 text-red-600 my-2 ">{imageErr?.im1}</p>
           )}
         </div>
         <div>
@@ -103,21 +144,29 @@ export default function MultipleComparisons() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const file = (e.target as HTMLInputElement)?.files?.[0];
 
-                if (file) getBase64(file, setImage2);
+                if (file)
+                  handleImageUpload({ file, side: 2, setState: setImage2 });
               }}
             />
           </button>
           {img2 && (
-            <div className="my-4 p-4 max-w-[500px] h-auto ">
-              <img alt="" className="mx-w-full" src={base64ext + img2?.data} />
+            <div className="my-4 p-4 max-w-[500px] ">
+              <img
+                alt=""
+                className="mx-w-full max-h-[400px] h-auto"
+                src={base64ext + img2?.data}
+              />
             </div>
+          )}
+          {imageErr?.im2 && (
+            <p className="p-2 text-red-600 my-2 ">{imageErr?.im2}</p>
           )}
         </div>
       </div>
       <div className="p-  md:p-4 flex flex-col md:flex-row gap-4 justify-evenly mt-4  ">
         <div>
           {" "}
-          <div className=" min-w-[320px]">
+          <div className="  w-full">
             {" "}
             <p className="mb-2 py-2">Enter prompt Message</p>
             <textarea
@@ -138,19 +187,24 @@ export default function MultipleComparisons() {
           </button>
         </div>
 
-        <div className="p-4  min-w-[380px]" id="response">
+        <div className="p-2 md:p-4  min-w-[280px]" id="response">
           {" "}
           {loading && <Spinners />}
-          <div style={{ background: "beige", padding: response ? 16 : 0 }}>
+          <div
+            style={{ background: "beige", padding: response ? 16 : 0 }}
+            className="response-prev"
+          >
             {response && <CopyToClipboardComponent response={response} />}
 
             <p className="text-justify">{response}</p>
           </div>
-          {error && <p className="p-2 text-red-500 my-2 ">{error}</p>}
-          <small>
-            Image reader may display inaccurate info, so double-check its
-            responses
-          </small>
+          {error && <p className="p-2 text-red-600 my-2 ">{error}</p>}
+          {response && (
+            <small>
+              Image reader may display inaccurate info, so double-check its
+              responses
+            </small>
+          )}
         </div>
       </div>
     </section>

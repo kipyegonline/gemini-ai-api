@@ -1,17 +1,19 @@
 import React from "react";
 import Webcam from "react-webcam";
 import { FaPlay } from "react-icons/fa";
-export default function GeminiWebcam({ sendImage = (f) => f }) {
+export default function GeminiWebcam({ sendImage = (f: string) => f }) {
   const [src, setSrc] = React.useState("");
   const cam = React.useRef(null);
   const constraints = { facingMode: "user" };
   React.useEffect(() => {}, []);
   const getImage = React.useCallback(() => {
-    const img = (cam?.current as HTMLCanvasElement)?.getScreenshot();
+    if (cam?.current) {
+      const img = (cam?.current as unknown)?.getScreenshot();
 
-    new Audio("/camera-shutter-click-01.mp3").play();
-    setSrc(img);
-    sendImage(img);
+      new Audio("/camera-shutter-click-01.mp3").play();
+      setSrc(img);
+      sendImage(img);
+    }
   }, [cam]);
   return (
     <div>
@@ -29,7 +31,7 @@ export default function GeminiWebcam({ sendImage = (f) => f }) {
       <button className="my-2 w-full" onClick={getImage}>
         <FaPlay size="1.25rem" className="inline-block mr-2" /> Take Image...
       </button>
-      {src && <small>We have an image</small>}
+      {/*src && <small>We have an image</small>*/}
     </div>
   );
 }
