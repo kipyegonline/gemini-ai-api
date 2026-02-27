@@ -1,93 +1,112 @@
-import { useEffect, useState } from "react";
-
-import { FaRegImages } from "react-icons/fa";
+import { useState } from "react";
 import { FaImage } from "react-icons/fa";
-import { FaMoon } from "react-icons/fa";
-import { FiSun } from "react-icons/fi";
+import { FaRegImages } from "react-icons/fa";
+import { BsStars } from "react-icons/bs";
+import { HiMoon, HiSun } from "react-icons/hi2";
 import "./App.css";
 import SingleComparison from "./Components/SingleComparison";
 import MultipleComparisons from "./Components/MultipleComparisons";
+import ReportProblemModal from "./Components/ReportProblemModal";
 
 function App() {
   const [single, setSingle] = useState(true);
-  const [isDark, setDark] = useState(!true);
-  useEffect(() => {
-    // document.body.setAttribute("data-mode", "dark");
-    //const isDark = document.querySelector("[data-mode='dark']");
-    //setDark(!!isDark);
-    document.addEventListener("visibilitychange", handleVisibilty);
-  }, []);
+  const [isDark, setIsDark] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
-  const handleModes = () => {
-    const isDark = document.querySelector("[data-mode='dark']");
-    return isDark;
-  };
-  const handleDark = (mode: boolean) => {
-    setDark(mode);
-    if (mode) document.body.setAttribute("data-mode", "dark");
-    else document.body.removeAttribute("data-mode");
-  };
-  handleModes();
-  const handleVisibilty = () => {
-    if (document.hidden) {
-      document.body.setAttribute("data-mode", "dark");
+  const toggleDark = () => {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      document.documentElement.classList.add("dark");
     } else {
-      document.body.removeAttribute("data-mode");
+      document.documentElement.classList.remove("dark");
     }
   };
+
   return (
-    <main className=" mb-12 w-full p-2 md:p-4 md:px-20 ">
-      <div className="absolute left-0 ml-4 hidden">
-        <img
-          src="/public/android-chrome-512x512.png"
-          className="w-20 rounded-lg h-auto"
-          alt=""
-        />
-      </div>
-      <div className="absolute right-0 mr-0 md:mr-4 z-30  cursor-pointer p-2">
-        {isDark ? (
-          <FiSun onClick={() => handleDark(!true)} className="text-2xl" />
-        ) : (
-          <FaMoon onClick={() => handleDark(true)} className="text-2xl" />
-        )}
-      </div>
-      <div className="pb-4">
-        <h1 className="text-balance">Image Reader AI</h1>
-        <p className="py-1">Convert Image to text, get insights using AI</p>
+    <main className="min-h-screen pb-16">
+      {/* Header */}
+      <header className="border-b border-[var(--border)] mb-8">
+        <div className="max-w-[860px] mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-[#1877F2]/10 flex items-center justify-center">
+              <BsStars className="text-[#1877F2] text-lg" />
+            </div>
+            <div className="text-left">
+              <h1 className="text-base font-semibold text-[var(--text)] leading-none">
+                Image reader AI
+              </h1>
+              <p className=" invisible text-xs text-[var(--text-muted)] mt-0.5">
+                Powered by Gemini
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={toggleDark}
+            className="w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[#1877F2] transition-all duration-200"
+            aria-label="Toggle theme"
+          >
+            {isDark ? (
+              <HiSun className="text-base" />
+            ) : (
+              <HiMoon className="text-base" />
+            )}
+          </button>
+        </div>
+      </header>
+
+      <div className="max-w-[860px] mx-auto px-4">
+        {/* Hero */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-[var(--text)] mb-2">
+            What do you see in this image?
+          </h2>
+          <p className="text-[var(--text-muted)] text-sm">
+            Upload an image and ask anything — get instant AI insights.
+          </p>
+        </div>
+
+        {/* Tab switcher */}
+        <div className="flex gap-1 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-1 mb-8">
+          <button
+            className={`tab-pill ${single ? "active" : "inactive"}`}
+            onClick={() => setSingle(true)}
+          >
+            <FaImage size="0.9rem" />
+            Single Image
+          </button>
+          <button
+            className={`tab-pill ${!single ? "active" : "inactive"}`}
+            onClick={() => setSingle(false)}
+          >
+            <FaRegImages size="0.9rem" />
+            Compare Images
+          </button>
+        </div>
+
+        {/* Content */}
+        {single ? <SingleComparison /> : <MultipleComparisons />}
       </div>
 
-      <section className="flex w-full justify-evenly flex-col md:flex-row gap-4 p2 sm:p-4  ">
+      {/* Footer */}
+      <footer className="mt-12 text-center text-[var(--text-muted)] text-xs border-t border-[var(--border)] pt-6 flex flex-col items-center gap-2">
+        <p>
+          Image AI may make mistakes. Verify important info. &copy;{" "}
+          {new Date().getFullYear()}
+        </p>
         <button
-          style={{
-            background: single ? "blue" : "#ccc",
-            color: single ? "white" : handleModes() ? "black" : "",
-            border: !single ? "1px solid blue" : "none",
-          }}
-          className="w-full transition-all duration-250 ease-in"
-          onClick={() => !single && setSingle(true)}
+          onClick={() => setReportOpen(true)}
+          className="text-[#1877F2] hover:underline hover:text-[#1464D8] transition-colors"
         >
-          <FaImage size="1.5rem" className="inline-block mr-2" />
-          Single Image
+          Report a problem
         </button>
-        <button
-          style={{
-            background: !single ? "blue" : "#ccc",
-            color: !single ? "white" : handleModes() ? "black" : "",
-            border: single ? "1px solid blue" : "none",
-          }}
-          className="w-full transition-all duration-250 ease-in"
-          onClick={() => single && setSingle(!true)}
-        >
-          <FaRegImages size="1.5rem" className="inline-block mr-2" />
-          Compare images
-        </button>
-      </section>
-      {single && <SingleComparison />}
-      {!single && <MultipleComparisons />}
-      <hr />
-      <footer className="fixed left-0 bottom-0 right-0 flex flex-col  justify-center py-4 bg-blue-600 text-white text-lg">
-        <p>All Rights Reserved &copy; {new Date().getFullYear()}</p>
       </footer>
+
+      <ReportProblemModal
+        isOpen={reportOpen}
+        onClose={() => setReportOpen(false)}
+      />
     </main>
   );
 }

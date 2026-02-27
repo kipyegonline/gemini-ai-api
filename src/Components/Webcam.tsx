@@ -1,37 +1,44 @@
 import React from "react";
 import Webcam from "react-webcam";
-import { FaPlay } from "react-icons/fa";
-export default function GeminiWebcam({ sendImage = (f: string) => f }) {
-  const [src, setSrc] = React.useState("");
+import { FaCamera } from "react-icons/fa";
+
+export default function GeminiWebcam({
+  sendImage = (_f: string) => {},
+}: {
+  sendImage?: (f: string) => void;
+}) {
   const cam = React.useRef(null);
-  const constraints = { facingMode: "user" };
-  React.useEffect(() => {}, []);
+  const [captured, setCaptured] = React.useState(false);
+
   const getImage = React.useCallback(() => {
     if (cam?.current) {
-      const img = (cam?.current as unknown)?.getScreenshot();
-
-      new Audio("/camera-shutter-click-01.mp3").play();
-      setSrc(img);
+      const img = (cam.current as any).getScreenshot();
+      new Audio("/camera-shutter-click-01.mp3").play().catch(() => {});
+      setCaptured(true);
       sendImage(img);
+      setTimeout(() => setCaptured(false), 1200);
     }
-  }, [cam]);
+  }, [cam, sendImage]);
+
   return (
-    <div>
-      <div className="flex justify-end">
-        <span>X</span>
+    <div className="flex flex-col items-center gap-4">
+      <div className="rounded-lg overflow-hidden border border-[#27272a]">
+        <Webcam
+          ref={cam}
+          audio={false}
+          height={360}
+          width={360}
+          videoConstraints={{ facingMode: "user" }}
+          className="block"
+        />
       </div>
-      <Webcam
-        ref={cam}
-        audio={false}
-        height={400}
-        width={400}
-        //mirrored
-        videoConstraints={constraints}
-      />
-      <button className="my-2 w-full" onClick={getImage}>
-        <FaPlay size="1.25rem" className="inline-block mr-2" /> Take Image...
+      <button
+        className={`btn-primary w-full ${captured ? "!bg-success" : ""}`}
+        onClick={getImage}
+      >
+        <FaCamera />
+        {captured ? "Captured!" : "Take Photo"}
       </button>
-      {/*src && <small>We have an image</small>*/}
     </div>
   );
 }

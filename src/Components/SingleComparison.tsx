@@ -1,28 +1,35 @@
 import React from "react";
-import { FaCloudUploadAlt } from "react-icons/fa";
-import { FaCamera } from "react-icons/fa";
+import { FaCloudUploadAlt, FaCamera } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
+import { BsImageFill } from "react-icons/bs";
 
-//import Spinner from "react-spinners"
 import { runGemini } from "../helpers/geminiai";
 import GeminiModal from "./Modal";
 import GeminiWebcam from "./Webcam";
 import Spinners from "./Spinners";
-
 import CopyToClipboardComponent from "./Copy.component";
 import { defaultPayload } from "../helpers/defaults";
+import ReportProblemModal from "./ReportProblemModal";
+
+// Global gtag injected by Google Analytics
+declare function gtag(
+  command: string,
+  action: string,
+  params?: Record<string, unknown>,
+): void;
 
 type Image = null | { data: string; mimeType: string };
+
 export default function SingleComparison() {
   const [image, setImage] = React.useState<Image>(null);
   const [prompt, setPrompt] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-
   const [response, setResponse] = React.useState("");
   const [err, setError] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [onCamera, setOnCamera] = React.useState<null | 0 | 1>(null);
   const [start, setStart] = React.useState<null | 1 | 2>(null);
+  const [reportOpen, setReportOpen] = React.useState(false);
   const defaultRef = React.useRef<null | "1" | "2">(null);
 
   React.useEffect(() => {
@@ -31,231 +38,252 @@ export default function SingleComparison() {
         .getElementById("response")
         ?.scrollIntoView({ behavior: "smooth" });
   }, [response]);
+
   React.useEffect(() => {
     if (defaultRef.current === "1") createDefaultView();
     defaultRef.current = "1";
   }, []);
+
   React.useEffect(() => {
-    if (typeof start === "number") {
-      handleRun();
-    }
+    if (typeof start === "number") handleRun();
   }, [start]);
 
   const createDefaultView = () => {
     const defaultKey = "default-view";
-    const [a, b] = defaultPayload;
+    const [a] = defaultPayload;
     const defaultView = localStorage.getItem(defaultKey);
-
     if (defaultView === null) {
       setImage(a.img);
       setPrompt(a.prompt);
-
       localStorage.setItem(defaultKey, "1");
-
       setStart(1);
     } else {
-      if (defaultView === "1") {
-        //setImage(b.img);
-        //setPrompt(b.prompt);
-        localStorage.setItem(defaultKey, "2");
-        //setStart(2);
-      } else {
-        setStart(null);
-      }
+      localStorage.setItem(defaultKey, "2");
     }
   };
+
   const getBase64 = async (file: File): Promise<Image> => {
     const reader = new FileReader();
     return new Promise((resolve) => {
       reader.onload = () => {
         const { result } = reader;
-
         if (typeof result === "string")
           resolve({ data: result, mimeType: file.type });
       };
       reader.readAsDataURL(file);
     });
   };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
     setOnCamera(0);
     const MB = 1e6;
-
     if (file) {
       setPrompt("");
-      const { size } = file;
-      if (size >= 4 * MB) {
+      if (file.size >= 4 * MB) {
         setError("Upload an image below 4MB");
         return;
-      } else {
-        setError("");
       }
-
-      const image: Image | null = await getBase64(file);
-
-      setImage(image);
+      setError("");
+      const img = await getBase64(file);
+      setImage(img);
     }
     e.target.value = "";
   };
+
   const goTo = (el: string) => {
-    const element = document.getElementById(el);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(el)?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleRun = async () => {
     if (!image || !prompt) {
-      setError("Add a clear image together with prompt text");
+      setError("Add an image and a prompt to get started.");
       setTimeout(() => setError(""), 5000);
-      return false;
+      return;
     }
 
     const payload = {
-      inlineData: { ...image, data: image?.data.split(",")[1] },
+      inlineData: { ...image, data: image.data.split(",")[1] },
     };
-    setLoading(true);
-    setTimeout(() => goTo("response"), 500);
 
+    setLoading(true);
     setResponse("");
     setError("");
-    const response = await runGemini(prompt, [payload]);
-    // check if there was an error processing image
-    if (response?.error) {
-      let err = response?.message.split(":");
-      err = `Something went wrong: ${err[err.length - 1]?.slice(0, 100) ?? ""}`;
-      setError(err);
-    } else {
-      setResponse(response);
-      if (response.includes("{")) {
-        console.log(typeof response, JSON.parse(response as object));
-      }
-    }
+    setTimeout(() => goTo("response"), 500);
 
-    setLoading(false);
+    gtag("event", "single_comparison_submit", {
+      origin: window.location.origin,
+      prompt_length: prompt.length,
+    });
+
+    try {
+      const res = await runGemini(prompt, [payload]);
+
+      if (typeof res === "object" && res.error) {
+        const message =
+          JSON.parse(res.message)?.error?.message ||
+          res.message ||
+          "An error occurred";
+        setError(`Something went wrong: ${message}`);
+        gtag("event", "single_comparison_error", {
+          origin: window.location.origin,
+          error_message: message,
+        });
+      } else {
+        setResponse(res as string);
+        gtag("event", "single_comparison_success", {
+          origin: window.location.origin,
+        });
+      }
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(`Something went wrong: ${message}`);
+      gtag("event", "single_comparison_error", {
+        origin: window.location.origin,
+        error_message: message,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
-  const handleCameraImage = (image: string) => {
-    const [type, data] = image.split(",");
-    const [mimeType] = type.split(":")[1].split(";");
+
+  const handleCameraImage = (img: string) => {
+    const [type] = img.split(",");
+    const mimeType = type.split(":")[1].split(";")[0];
     setOnCamera(1);
-    setImage({ data: image, mimeType });
-    setTimeout(() => setOpen(false), 1000);
+    setImage({ data: img, mimeType });
+    setTimeout(() => setOpen(false), 800);
   };
 
   return (
-    <section className="flex flex-col md:flex-row gap-4   p-4 md:p-8 transition-all duration-150 ease-in">
-      <input type="file" className="hidden" id="default-img" />
-
-      <div className="flex flex-col   ">
-        {image && (
-          <div className="my-4 border-greens h-full object-cover max-h-[400px]">
+    <div className="flex flex-col gap-6">
+      {/* Image area */}
+      <div className="card">
+        {/* Preview */}
+        {image ? (
+          <div className="mb-5 rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg)] flex items-center justify-center max-h-72">
             <img
               src={image.data}
-              alt=""
-              className="max-w-full object-covers h-auto max-h-[400px]"
+              alt="Preview"
+              className="max-h-72 w-auto object-contain mx-auto"
             />
           </div>
-        )}
-        <div className="flex flex-col md:flex-row justify-evenly gap-4 p-4 items-center">
-          <button
-            className="w-full"
-            disabled={loading}
-            onClick={() => document?.getElementById("img-btn")?.click()}
-            style={{
-              background: onCamera === 0 ? "blue" : "",
-              color: onCamera == 0 ? "white" : "",
-            }}
+        ) : (
+          <label
+            htmlFor="img-btn"
+            className="drop-zone mb-5 cursor-pointer"
+            onClick={() => document.getElementById("img-btn")?.click()}
           >
-            {" "}
-            <input
-              id="img-btn"
-              type="file"
-              disabled={loading}
-              className="hidden"
-              accept=".jpeg,.jpg, .png, .webp "
-              onChange={handleFileUpload}
-            />
-            <FaCloudUploadAlt size="1.5rem" className="inline-block mr-2" />
-            {onCamera === 0 ? "Upload another " : "Upload "}
-          </button>
-          <button
-            className="w-full"
-            disabled={loading}
-            onClick={() => {
-              setOpen(!false);
-            }}
-            style={{
-              background: onCamera == 1 ? "blue" : "",
-              color: onCamera == 1 ? "white" : "",
-            }}
-          >
-            <FaCamera size="1.5rem" className="inline-block mr-2" />
-            {onCamera === 1 ? "Take another one" : "Webcam"}
-          </button>
-        </div>
-        <div>
-          <GeminiModal
-            isOpen={open}
-            setOpen={() => {
-              setOpen(!true);
-            }}
-          >
-            <div>
-              <GeminiWebcam sendImage={handleCameraImage} />
-              <button className="hidden" onClick={() => setOpen(false)}>
-                close
-              </button>
-            </div>
-          </GeminiModal>
-        </div>
-
-        <div className="flex flex-col">
-          <label id="prompt" className="my-2">
-            Describe what you want from the image
+            <BsImageFill className="text-3xl opacity-40" />
+            <span className="text-sm font-medium">
+              Drop an image or click to upload
+            </span>
+            <span className="text-xs opacity-50">
+              JPEG, PNG, WebP · max 4 MB
+            </span>
           </label>
-          <textarea
-            rows={3}
-            cols={40}
-            onChange={(e) => setPrompt(e.target.value)}
-            id="prompt"
-            value={prompt}
-            className="p-4 rounded-lg text-base outline-none active:outline-none border border-gray-400"
-            placeholder="Enter your prompt"
-          ></textarea>
+        )}
+
+        {/* Action buttons */}
+        <div className="flex gap-3">
+          <button
+            className={`btn-ghost flex-1 ${onCamera === 0 ? "!border-accent !text-white" : ""}`}
+            disabled={loading}
+            onClick={() => document.getElementById("img-btn")?.click()}
+          >
+            <FaCloudUploadAlt />
+            {image && onCamera === 0 ? "Replace" : "Upload"}
+          </button>
+          <button
+            className={`btn-ghost flex-1 ${onCamera === 1 ? "!border-accent !text-white" : ""}`}
+            disabled={loading}
+            onClick={() => setOpen(true)}
+          >
+            <FaCamera />
+            {onCamera === 1 ? "Retake" : "Webcam"}
+          </button>
         </div>
-        <button
-          className="w-full  my-4 p-2 rounded-lg outline-none text-white bg-blue-500"
-          onClick={handleRun}
-          disabled={loading || prompt.trim().length === 0}
-          style={{ opacity: prompt.trim().length === 0 ? 0.5 : 1 }}
-        >
-          {loading ? "Processing..." : "Ask"}{" "}
-          <IoSend className="inline-block ml-4" />
-        </button>
+
+        <input
+          id="img-btn"
+          type="file"
+          disabled={loading}
+          className="hidden"
+          accept=".jpeg,.jpg,.png,.webp"
+          onChange={handleFileUpload}
+        />
       </div>
 
-      <div className="  w-full p-4  min-w-[280px]" id="response">
-        <div style={{ background: "beige", padding: response ? 16 : 0 }}>
-          {response && <CopyToClipboardComponent response={response} />}
-          <pre className=" w-full response-prev " wrap="hard">
-            {response}
-          </pre>
-        </div>
-
-        {!response && start === null && (
-          <div className="flexi flex-col hidden justify-center items-center h-[200px]">
-            <h3 className="p-4 text-xl font-medium">
-              Add an image and prompt message to get started
-            </h3>
+      {/* Prompt + submit */}
+      <div className="card flex flex-col gap-4">
+        <label className="text-sm font-medium text-muted text-left">
+          Your prompt
+        </label>
+        <textarea
+          rows={3}
+          className="input-field"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="e.g. What's in this image? Describe in detail."
+        />
+        <button
+          className="btn-primary w-full"
+          onClick={handleRun}
+          disabled={loading || !prompt.trim()}
+        >
+          {loading ? "Processing…" : "Ask AI"}
+          <IoSend />
+        </button>
+        {err && (
+          <div className="flex flex-col gap-1.5">
+            <p className="error-pill text-left">{err}</p>
+            <p className="text-xs text-left text-[var(--text-muted)]">
+              Still seeing this?{" "}
+              <button
+                type="button"
+                onClick={() => setReportOpen(true)}
+                className="text-[#1877F2] hover:underline transition-colors"
+              >
+                Report this problem
+              </button>
+            </p>
           </div>
         )}
-        {loading && <Spinners single />}
-        <p className="text-red-600 py-3">{err}</p>
-        {response && (
-          <small>
-            Image reader may display inaccurate info so double-check its
-            responses
-          </small>
-        )}
       </div>
-    </section>
+
+      <ReportProblemModal
+        isOpen={reportOpen}
+        onClose={() => setReportOpen(false)}
+      />
+
+      {/* Response */}
+      {(loading || response) && (
+        <div id="response" className="card flex flex-col gap-3">
+          {loading ? (
+            <Spinners single />
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-semibold text-muted uppercase tracking-widest">
+                  Response
+                </span>
+                <CopyToClipboardComponent response={response} />
+              </div>
+              <div className="response-card text-left">{response}</div>
+              <p className="text-xs text-muted mt-1 text-left">
+                AI may display inaccurate info — double check critical
+                responses.
+              </p>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Webcam modal */}
+      <GeminiModal isOpen={open} setOpen={() => setOpen(false)}>
+        <GeminiWebcam sendImage={handleCameraImage} />
+      </GeminiModal>
+    </div>
   );
 }

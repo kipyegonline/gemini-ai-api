@@ -1,35 +1,30 @@
 import { useState } from "react";
-import { FaCopy } from "react-icons/fa";
+import { FaCopy, FaCheck } from "react-icons/fa";
 import { copyToClipboard } from "../helpers/clipboard";
-import { FaCheckDouble } from "react-icons/fa";
 
 export default function CopyToClipboardComponent({ response = "" }) {
   const [copied, setCopied] = useState(false);
-  const [show, setShow] = useState(false);
-  const handleCopy = async (response: string) => {
-    if (!response) return;
 
+  const handleCopy = async () => {
+    if (!response) return;
     if (await copyToClipboard(response)) {
       setCopied(true);
-      setShow(true);
-      setTimeout(() => setShow(false), 5000);
+      setTimeout(() => setCopied(false), 3000);
     }
   };
-  const getMode = () => document.querySelector("[data-mode='dark']");
 
   return (
-    <div className="flex justify-end items-center mb-2 relative">
-      {" "}
-      <span className="text-green-600 text-base mr-2">
-        {" "}
-        {show && <FaCheckDouble />}
-      </span>
-      <span
-        style={{ color: copied ? "blue" : "" }}
-        onClick={() => handleCopy(response)}
-      >
-        <FaCopy style={{ fill: getMode() ? "black" : "" }} />
-      </span>{" "}
-    </div>
+    <button
+      onClick={handleCopy}
+      title="Copy to clipboard"
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ${
+        copied
+          ? "bg-success/10 text-success border border-success/30"
+          : "bg-[#27272a] text-muted hover:text-white border border-[#3f3f46]"
+      }`}
+    >
+      {copied ? <FaCheck size="0.7rem" /> : <FaCopy size="0.7rem" />}
+      {copied ? "Copied!" : "Copy"}
+    </button>
   );
 }

@@ -1,19 +1,21 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
+
 const API_KEY = import.meta.env.VITE_API_KEY;
-const genAI = new GoogleGenerativeAI(API_KEY);
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export const runGemini = async (
-  prompt = "What's difference between these pictures?",
-  imageParts: any[]
-) => {
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  prompt = "What's the difference between these pictures?",
+  imageParts: any[],
+): Promise<string | { error: true; message: string }> => {
   try {
-    const result = await model.generateContent([prompt, ...imageParts]);
-    const response = await result.response;
-
-    const text = response.text();
-    return text;
+    const result = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: [{ role: "user", parts: [{ text: prompt }, ...imageParts] }],
+    });
+    return result.text ?? "";
   } catch (error: unknown) {
-    return { error: true, message: error.message };
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred";
+    return { error: true, message };
   }
 };
