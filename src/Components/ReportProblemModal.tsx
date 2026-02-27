@@ -57,7 +57,7 @@ export default function ReportProblemModal({ isOpen, onClose }: Props) {
 
     try {
       const res = await fetch(
-        "https://formsubmit.co/ajax/vinnykipx@gmail.com",
+        "https://formsubmit.co/ajax/56feb811eea19636710bfee234cd05e0",
         {
           method: "POST",
           headers: {
@@ -83,9 +83,7 @@ export default function ReportProblemModal({ isOpen, onClose }: Props) {
       }
     } catch {
       setStatus("error");
-      setErrorMsg(
-        "Could not send your report. Please try again or email vinnykipx@gmail.com directly.",
-      );
+      setErrorMsg("Could not send your report. Please try again ");
     }
   };
 

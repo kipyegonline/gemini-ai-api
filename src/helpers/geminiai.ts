@@ -2,10 +2,13 @@ import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const ai = new GoogleGenAI({ apiKey: API_KEY });
-
+type Parts = {
+  role: string;
+  parts: { text: string } | { data: string; mimeType: string };
+}[];
 export const runGemini = async (
   prompt = "What's the difference between these pictures?",
-  imageParts: any[],
+  imageParts: Parts,
 ): Promise<string | { error: true; message: string }> => {
   try {
     const result = await ai.models.generateContent({
